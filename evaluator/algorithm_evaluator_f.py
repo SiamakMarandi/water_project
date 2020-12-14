@@ -6,7 +6,7 @@ from sklearn.svm import SVR
 from sklearn import linear_model
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score, explained_variance_score, max_error
 from sklearn.model_selection import cross_val_score, train_test_split, GridSearchCV
 from sklearn import preprocessing, metrics
 from sklearn.neighbors import KNeighborsRegressor
@@ -41,18 +41,14 @@ warnings.filterwarnings('ignore')
 # dataset.main()
 dataset = dataset.main()
 
-print("x_train  :  ", dataset["x_train"])
-print("y_train  :  ", dataset["y_train"])
+# print("x_train  :  ", dataset["x_train"])
+# print("y_train  :  ", dataset["y_train"])
 x_train = dataset["x_train"]
 y_train = dataset["y_train"]
 x_test = dataset["x_test"]
 y_test = dataset["y_test"]
 x_cv = dataset["x_cv"]
 y_cv = dataset["y_cv"]
-print('Number of data points in train data:', x_train.shape[0])
-print('Number of data points in test data:', x_test.shape[0])
-print('Number of data points in test data:', x_cv.shape[0])
-
 # ########################################################################
 
 
@@ -60,14 +56,18 @@ def evaluate_preds(model, x_true, y_true, y_pred):
    
     print("Name of the kernel : ", model)
     print('Model Variance score: {}'.format(model.score(x_true, y_true)))
-    print('Model Mean Absolute Error:', metrics.mean_absolute_error(y_true, y_pred))
-    print('Model Mean Squared Error:', metrics.mean_squared_error(y_true, y_pred))
-    print('Model Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_true, y_pred)))
+    print('Mean Absolute Error:', metrics.mean_absolute_error(y_true, y_pred))
+    print('Mean Squared Error:', metrics.mean_squared_error(y_true, y_pred))
+    print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_true, y_pred)))
+    print("explained variance regression score : ", explained_variance_score(y_true, y_pred))
+    print("Max error : ", max_error(y_true, y_pred))
+    print("R² score, the coefficient of determination  : ", r2_score(y_test, y_pred))
     metric_dict = {
-                   "Mean Absolute Error": round(metrics.mean_absolute_error(y_true, y_pred), 2),
-                   "Root Mean Squared Error": round(np.sqrt(metrics.mean_squared_error(y_true, y_pred)), 2),
-                   "Variance score": round(model.score(x_true, y_true), 2)}
-
+                   "Mean Absolute Error": round(metrics.mean_absolute_error(y_true, y_pred), 3),
+                   "Root Mean Squared Error": round(np.sqrt(metrics.mean_squared_error(y_true, y_pred)), 3),
+                   "F^2 score": round(model.score(x_true, y_true), 3),
+                   "R-squered": round(r2_score(y_test, y_pred), 3),
+                    "Explained variance score": round(explained_variance_score(y_true, y_pred), 3)}
     return metric_dict
 
 # #################################################################################
