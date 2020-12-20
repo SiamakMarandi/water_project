@@ -18,15 +18,14 @@ def main():
     # df = pd.read_json('dataset_10.json')
     df = pd.read_csv('H:/Project/water_project/dataset/dataset_50.csv') 
     print("dataset description is : \n", df.describe())
-    df = df[:5000]
+    df = df[:500]
     # create a Data Frame
     df1 = df[["DeviceId", "MeasurementTime", "Value"]]
     
     #-----------Remove null
     df1 = df1.dropna()
     #-----------Drop the same row with the same value
-    df1 = df1.drop_duplicates(subset=["DeviceId", "MeasurementTime"], keep='last')
-    
+    df1 = df1.drop_duplicates(subset=["DeviceId", "MeasurementTime"], keep='last')   
     #Seprate Date and Time------------------------------------------------------
     df1['Date'] = pd.to_datetime(df1['MeasurementTime'], utc=True)
     df1['Day'] = df1['Date'].dt.day
@@ -91,7 +90,5 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
 
 

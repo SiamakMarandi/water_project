@@ -64,9 +64,8 @@ def evaluate_preds(model, x_true, y_true, y_pred):
     print("R² score, the coefficient of determination  : ", r2_score(y_test, y_pred))
     metric_dict = {
                    "Mean Absolute Error": round(metrics.mean_absolute_error(y_true, y_pred), 3),
-                   "Root Mean Squared Error": round(np.sqrt(metrics.mean_squared_error(y_true, y_pred)), 3),
-                   "F^2 score": round(model.score(x_true, y_true), 3),
-                   "R-squered": round(r2_score(y_test, y_pred), 3),
+                   "Root Mean Squared Error": round(np.sqrt(metrics.mean_squared_error(y_true, y_pred)), 3),                   
+                   "R-squered": round(r2_score(y_true, y_pred), 3),
                     "Explained variance score": round(explained_variance_score(y_true, y_pred), 3)}
     return metric_dict
 
@@ -91,8 +90,7 @@ model_factory = [
     XGBRegressor(nthread=1),
     GradientBoostingRegressor(),
     RandomForestRegressor(),
-    Ridge(alpha=1.0),
-    GradientBoostingRegressor(),
+    Ridge(alpha=1.0),    
     linear_model.Lasso(alpha=0.1),
     BaggingRegressor(),
     StackingRegressor(estimators=estimators),
@@ -100,9 +98,17 @@ model_factory = [
     ExtraTreesRegressor(),
     KNeighborsRegressor(),
     LinearRegression(),
+
 ]
 
 
+# #######################################  SVM
+clf_svr = SVR(kernel = 'rbf')
+clf_svr.fit(x_train, y_train)
+svr_pred = clf_svr.predict(x_test)
+svr_matrices = evaluate_preds(clf_svr, x_test, y_test, svr_pred)
+
+# #################################################################
 # #######################################  Lasso
 clf_lr = LinearRegression()
 clf_lr.fit(x_train, y_train)
@@ -216,6 +222,7 @@ compare_matrices = pd.DataFrame({
                                 "StackingRegressor": sc_matrices,
                                 #"VotingRegressor": vc_matrices,
                                 "XGBRegressor": xgb_matrices,
+                                "SVM": svr_matrices,
                                  })
 
 compare_matrices.plot.bar(rot=0)
