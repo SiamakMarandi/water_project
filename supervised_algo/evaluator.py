@@ -46,7 +46,7 @@ def evaluate_preds(model, x_train, y_train, x_true, y_true, x_cv, y_cv):
     cross_validation_score = cross_val_score(model, x_train, y_train, cv=2)
     print("Cross validation score : ", cross_validation_score)
     cross_validation_predict = cross_val_predict(model, x_train, y_train, cv=2)
-    print("Cross validation predict : ", cross_validation_predict)
+    # print("Cross validation predict : ", cross_validation_predict)
     cross_val_accuracy = np.mean(cross_validation_score) * 100
     print("cross validation accuracy : ", cross_val_accuracy)
     #return metric_dict

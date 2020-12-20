@@ -27,6 +27,7 @@ from xgboost import XGBRegressor
 import dataset
 import evaluator
 import visualiser
+import hyperparameter_tuning
 from sklearn.metrics import roc_curve
 import seaborn as sns
 from sklearn import metrics
@@ -41,8 +42,9 @@ x_cv = dataset["x_cv"]
 y_cv = dataset["y_cv"]
 
 clf = KNeighborsRegressor(n_neighbors=5)
+print("parameters   : ", clf.get_params().keys())
+params = hyperparameter_tuning.knn_hyperparameter_tuner(clf, x_train, y_train)
+clf.set_params(**params)
 clf.fit(x_train, y_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)
 visualiser.plotter(clf, x_train, y_train, x_test, y_test)
-
-

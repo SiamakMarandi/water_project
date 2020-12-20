@@ -40,12 +40,11 @@ x_cv = dataset["x_cv"]
 y_cv = dataset["y_cv"]
 
 clf = SVR(kernel = 'rbf')
-clf.fit(x_train, y_train)
-# evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)
-# visualiser.plotter(clf, x_train, y_train, x_test, y_test)
-params = hyperparameter_tuning.func(clf, x_train, y_train)
+# evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)# 
+params = hyperparameter_tuning.svm_hyperparameter_tuner(clf, x_train, y_train)
 # print(RandomForestRegressor().get_params())
 clf.set_params(**params)
+clf.fit(x_train, y_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)
-
+visualiser.plotter(clf, x_train, y_train, x_test, y_test)
 

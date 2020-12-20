@@ -39,14 +39,12 @@ x_cv = dataset["x_cv"]
 y_cv = dataset["y_cv"]
 
 clf = RandomForestRegressor(max_depth=3, random_state=42, n_jobs=-1)
-clf.fit(x_train, y_train)
-# evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)
-# visualiser.plotter(clf, x_train, y_train, x_test, y_test)
-params = hyperparameter_tuning.func(clf, x_train, y_train)
+params = hyperparameter_tuning.rfr_hyperparameter_tuner(clf, x_train, y_train)
 # print(RandomForestRegressor().get_params())
 clf.set_params(**params)
+clf.fit(x_train, y_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)
-# visualiser.plotter(clf, x_train, y_train, x_test, y_test)
+visualiser.plotter(clf, x_train, y_train, x_test, y_test)
 
 
 
