@@ -16,7 +16,7 @@ def GridSearchCVFunc(kernel, x_train, y_train, param):
 
 def rfr_hyperparameter_tuner(model, x_train, y_train):
     RandomForestRegressor_parameters = {
-        "n_estimators": np.arange(10, 30, 10),
+        "n_estimators": np.arange(100, 1000, 100),
         "criterion": ['mse', 'mae'],
         "max_depth": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, None],
         "min_samples_split": [2, 4, 6, 8, 10],                                      
@@ -45,3 +45,21 @@ def knn_hyperparameter_tuner(model, x_train, y_train):
         "n_jobs": [-1],       
         }
     return GridSearchCVFunc(model, x_train, y_train, knn_parameters)
+
+def ridge_hyperparameter_tuner(model, x_train, y_train):
+    ridge_parameters = {    
+        "alpha": [0.05, 0.1, 0.2, 0.3, 0.5], 
+        "fit_intercept": [True, False],     
+        "normalize": [True, False],
+        "max_iter": [2000],       
+        }
+    return GridSearchCVFunc(model, x_train, y_train, ridge_parameters)
+
+def xgb_hyperparameter_tuner(model, x_train, y_train):
+    xgb_parameters = {    
+        "alpha": [0.05, 0.1, 0.2, 0.3, 0.5], 
+        "fit_intercept": [True, False],     
+        "normalize": [True, False],
+        "max_iter": [2000],       
+        }
+    return GridSearchCVFunc(model, x_train, y_train, xgb_parameters)
