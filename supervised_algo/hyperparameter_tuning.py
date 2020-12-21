@@ -57,9 +57,21 @@ def ridge_hyperparameter_tuner(model, x_train, y_train):
 
 def xgb_hyperparameter_tuner(model, x_train, y_train):
     xgb_parameters = {    
-        "alpha": [0.05, 0.1, 0.2, 0.3, 0.5], 
-        "fit_intercept": [True, False],     
-        "normalize": [True, False],
-        "max_iter": [2000],       
+        "n_estimators": np.arange(10, 30, 10),
+        'max_depth': np.arange(3, 15, 1),
+        'learning_rate': [0.01, 0.03, 0.05, 0.1, 0.3, 0.4, 0.5, 0.6, 0.7],
+        'booster': ["gbtree", "gblinear", "dart"],                        
+        'subsample': [0.9, 1.0],
+        'colsample_bytree': [0.9, 1.0], 
+        'n_jobs': [-1],  
+        'verbosity': [0],
         }
     return GridSearchCVFunc(model, x_train, y_train, xgb_parameters)
+
+def adaboost_hyperparameter_tuner(model, x_train, y_train):
+    ada_parameters = {    
+        "n_estimators": np.arange(10, 30, 10),         
+        'learning_rate': [0.01, 0.03, 0.05, 0.1, 0.3, 0.4, 0.5, 0.6, 0.7],
+        'loss' : ['linear', 'square', 'exponential'],
+        }
+    return GridSearchCVFunc(model, x_train, y_train, ada_parameters)
