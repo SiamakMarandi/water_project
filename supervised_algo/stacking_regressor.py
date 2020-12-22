@@ -35,18 +35,18 @@ from sklearn.ensemble import ExtraTreesRegressor
 import dataset
 import evaluator
 import visualiser
+import data_picker
 from sklearn.metrics import roc_curve
 import seaborn as sns
 from sklearn import metrics
 sns.set()
 
-dataset = dataset.main()
-x_train = dataset["x_train"]
-y_train = dataset["y_train"]
-x_test = dataset["x_test"]
-y_test = dataset["y_test"]
-x_cv = dataset["x_cv"]
-y_cv = dataset["y_cv"]
+x_train = data_picker.x_train
+y_train = data_picker.y_train
+x_test = data_picker.x_test
+y_test = data_picker.y_test
+x_cv = data_picker.x_cv
+y_cv = data_picker.y_cv
 
 estimators = [
     

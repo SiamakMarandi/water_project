@@ -75,3 +75,14 @@ def adaboost_hyperparameter_tuner(model, x_train, y_train):
         'loss' : ['linear', 'square', 'exponential'],
         }
     return GridSearchCVFunc(model, x_train, y_train, ada_parameters)
+
+def et_hyperparameter_tuner(model, x_train, y_train):
+    ExtraTreesr_parameters = {
+        "n_estimators": np.arange(100, 1000, 100),
+        "criterion": ['mse', 'mae'],
+        "max_depth": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, None],  
+        "max_features": ['auto', 'sqrt'],
+        "bootstrap": [True, False],
+        "n_jobs": [-1],
+        }
+    return GridSearchCVFunc(model, x_train, y_train, ExtraTreesr_parameters)

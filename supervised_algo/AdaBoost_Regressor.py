@@ -27,6 +27,7 @@ from sklearn.ensemble import AdaBoostRegressor
 from sklearn.linear_model import Ridge
 from xgboost import XGBRegressor
 import dataset
+import data_picker
 import evaluator
 import visualiser
 import hyperparameter_tuning
@@ -35,13 +36,12 @@ import seaborn as sns
 from sklearn import metrics
 sns.set()
 
-dataset = dataset.main()
-x_train = dataset["x_train"]
-y_train = dataset["y_train"]
-x_test = dataset["x_test"]
-y_test = dataset["y_test"]
-x_cv = dataset["x_cv"]
-y_cv = dataset["y_cv"]
+x_train = data_picker.x_train
+y_train = data_picker.y_train
+x_test = data_picker.x_test
+y_test = data_picker.y_test
+x_cv = data_picker.x_cv
+y_cv = data_picker.y_cv
 
 clf = AdaBoostRegressor(n_estimators=100, random_state=0)
 # print(AdaBoostRegressor().get_params())
