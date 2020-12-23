@@ -64,6 +64,16 @@ X_ohe = ohe.fit_transform(X)
 x_train, x_test, y_train, y_test = train_test_split(X_ohe, y, shuffle=False, test_size=0.2, random_state=42)
 
 x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, shuffle=False, test_size=0.2, random_state=42)
+
+x_predicted = df_filtered.loc[indexHour[0]:indexHour[0], ["DeviceId", "Day", "Month", "Year", "hour", "Day_of_Week", "Is_weekend"]]
+y_predicted = df_filtered.loc[indexHour[0]:indexHour[0], ["Value"]]
+print("x_train : ", x_train)
+print("x_predicted : ", x_predicted)
+print("y_predicted : ", y_predicted)
+x_predicted_ohe = ohe.fit_transform(x_predicted)
+print("x_predicted_ohe : ", x_predicted_ohe)
+
+
 # print("x_train : ", x_train)
 # print('Number of data points in train data:', x_train.shape)
 # print('Number of data points in test data:', x_test.shape)

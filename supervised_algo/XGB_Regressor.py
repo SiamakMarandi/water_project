@@ -42,8 +42,8 @@ y_cv = data_picker.y_cv
 
 clf = XGBRegressor(nthread=1, booster="gblinear")
 # print(XGBRegressor().get_params())
-params = hyperparameter_tuning.xgb_hyperparameter_tuner(clf, x_train, y_train)
-clf.set_params(**params)
+#params = hyperparameter_tuning.xgb_hyperparameter_tuner(clf, x_train, y_train)
+#clf.set_params(**params)
 clf.fit(x_train, y_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)
 visualiser.plotter(clf, x_train, y_train, x_test, y_test)

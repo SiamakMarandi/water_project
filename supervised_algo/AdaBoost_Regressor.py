@@ -44,7 +44,7 @@ x_cv = data_picker.x_cv
 y_cv = data_picker.y_cv
 
 clf = AdaBoostRegressor(n_estimators=100, random_state=0)
-# print(AdaBoostRegressor().get_params())
+print(AdaBoostRegressor().get_params())
 params = hyperparameter_tuning.adaboost_hyperparameter_tuner(clf, x_train, y_train)
 clf.set_params(**params)
 clf.fit(x_train, y_train)

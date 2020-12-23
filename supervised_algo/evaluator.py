@@ -17,6 +17,7 @@ from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 from gaussrank import *
 import warnings
+import data_picker
 import seaborn as sns
 sns.set()
 
@@ -24,7 +25,10 @@ warnings.filterwarnings('ignore')
 
 
 def evaluate_preds(model, x_train, y_train, x_true, y_true, x_cv, y_cv):
-    y_pred = model.predict(x_true)   
+    y_pred = model.predict(x_true)    
+    pred = model.predict(data_picker.x_predict) 
+    print("y_pred : ", y_pred)
+    print("pred : ", pred)
     print("Name of the kernel : ", model)
     print('Model Variance score: {}'.format(model.score(x_true, y_true)))
     print('Mean Absolute Error:', metrics.mean_absolute_error(y_true, y_pred))
@@ -52,7 +56,7 @@ def evaluate_preds(model, x_train, y_train, x_true, y_true, x_cv, y_cv):
     #return metric_dict
    
     elbo = []
-    list_k = list(range(2, 5))
+    list_k = list(range(2, 3))
 
     for k in list_k:
         cross_validation_score = cross_val_score(model, x_cv, y_cv, cv=k)        

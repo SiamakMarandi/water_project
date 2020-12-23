@@ -11,7 +11,7 @@ year = 2019
 month = 6
 day = 19
 hour = 23
-computation_days = 10
+computation_days = 4
 what_hour = 1
 dataset = dataset.main()
 # ======================
@@ -23,74 +23,62 @@ dataset = dataset.main()
 df_filtered = dataset[dataset['DeviceId'] == dId]
 df_filtered.reset_index(inplace=True, drop=True)
 
-# print("df_filtered : ", df_filtered)
+
 
 # ============
 # indexNames = X[X['Year'] == year and X['Month'] == month and X['Day'] == day and X['DeviceId'] == dId].index
-
-y_df_filtered = df_filtered.loc[:, ["Value"]]
+indexHour = df_filtered[(df_filtered["DeviceId"] == dId) & 
+(df_filtered['Year'] == year) & (df_filtered['Month']== month) & 
+(df_filtered["hour"] == hour) & (df_filtered["Day"] == day)].index
 x_df_filtered = df_filtered.loc[:, ["DeviceId", "Day", "Month", "Year", "hour", "Day_of_Week", "Is_weekend"]]
-indexHour = x_df_filtered[(x_df_filtered["DeviceId"] == dId) & 
-(x_df_filtered['Year'] == year) & (x_df_filtered['Month']== month) & 
-(x_df_filtered["hour"] == hour) & (x_df_filtered["Day"] == day)].index
-# print("df_filtered : ", x_df_filtered)
-# print("df_filtered : ", y_df_filtered)
+y_df_filtered = df_filtered.loc[:, ["Value"]]
+
 ohe = OneHotEncoder(sparse=False)
-x_df_filtered = ohe.fit_transform(x_df_filtered)
+df_filtered = ohe.fit_transform(x_df_filtered)
+# print("df_filtered : ", df_filtered)
 # indexNames = dataset[(dataset["DeviceId"] == dId)].index
 # print("indexNames : ", indexHour)
-
+print("x_df_filtered : ", x_df_filtered.shape)
 # final_dataset = df_filtered.iloc[indexHour - computation_days + what_hour, computation_days]
 start_index = indexHour[0] - (computation_days + what_hour)
-# print("start_index : ", start_index)
-x_dataset = x_df_filtered[start_index : start_index + computation_days]
-# print("x_dataset : ", x_dataset)
+print("start_index : ", start_index)
+final_dataset = x_df_filtered[start_index : start_index + computation_days]
+print("final dataset : ", final_dataset)
 
+X = final_dataset.loc[:, ["DeviceId", "Day", "Month", "Year", "hour", "Day_of_Week", "Is_weekend"]]
+y = final_dataset.loc[:, ["Value"]]
 
 # print("X : ", X)
 # print("y : ", y)
 
-x_cols = y_df_filtered.columns[:]
-x = y_df_filtered[x_cols]
+x_cols = y.columns[:]
+x = y[x_cols]
 
 s = GaussRankScaler()
 x_ = s.fit_transform(x)
 assert x_.shape == x.shape
-y_df_filtered[x_cols] = x_
+y[x_cols] = x_
 # ===============
-y_dataset = y_df_filtered[start_index : start_index + computation_days]
-# print("y_dataset : ", y_dataset)
+
 # ===============
 # print('Number of data points in train data:', x)
 #-----------------------------------Categorical to Binary-----------------------------------------
-
+# ohe = OneHotEncoder(sparse=False)
+# X_ohe = ohe.fit_transform(X)
 # Train and Test (x,y) / shuffle false because of importance roll of date in our study----------------------
 # train_x, test_x, train_y, test_y = train_test_split(X_ohe, y, stratify=y, test_size=0.3, shuffle=False)
 # #################################
-x_predict = x_df_filtered[indexHour[0]]
-y_predict = y_df_filtered.iloc[indexHour[0]]
-x_predict = x_predict.reshape(1,-1)
-y_predict = y_predict.to_frame() 
 
-x_train, x_test, y_train, y_test = train_test_split(x_dataset, y_dataset, shuffle=False, test_size=0.2, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(X_ohe, y, shuffle=False, test_size=0.2, random_state=42)
 
 x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, shuffle=False, test_size=0.2, random_state=42)
-# print("x_dataset : ", x_dataset)
-# print("y_dataset : ", y_dataset)
 """
-print("x_dataset shape : ", x_dataset.shape)
-print("y_dataset shape : ", y_dataset.shape)
-print("x_train.shape : ",x_train.shape)
-print("y_train.shape : ",y_train.shape)
-print("x_test.shape : ",x_test.shape)
-print("y_test.shape : ",y_test.shape)
-print("x_cv.shape : ",x_cv.shape)
-print("y_cv.shape : ",y_cv.shape)
-print("x_predict.shape : ", x_predict.shape)
-print("reshaped predict : ", x_predict.shape)
+print("x_hoe : ",X_ohe)
+print("x_hoe : ",X_ohe[0])
+x_predict = df_filtered.loc[indexHour[0]:indexHour[0], ["DeviceId", "Day", "Month", "Year", "hour", "Day_of_Week", "Is_weekend"]]
+y_predict = df_filtered.loc[indexHour[0]:indexHour[0], ["Value"]]
+x_ohe_predict = ohe.fit_transform(x_predict)
+print("x_predict : ", x_predict)
 print("y_predict : ", y_predict)
-print("y_predict.shape", y_predict.shape)
-print(" predict : ", y_predict.shape)
-
+print("x_ohe_predict: ", x_ohe_predict)
 """
-
