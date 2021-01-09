@@ -1,6 +1,8 @@
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV
+from tqdm import tqdm
+
 
 def GridSearchCVFunc(kernel, x_train, y_train, param):
     g_search = GridSearchCV(estimator=kernel,
@@ -26,9 +28,9 @@ def rfr_hyperparameter_tuner(model, x_train, y_train):
                     }
     return GridSearchCVFunc(model, x_train, y_train, RandomForestRegressor_parameters)
     
-def svm_hyperparameter_tuner(model, x_train, y_train):
+def svm_hyperparameter_tuner(model, x_train, y_train):    
     svm_parameters = {
-            "kernel": ["linear", "rbf", ],
+            "kernel": ["linear", "rbf", "poly"],
             "degree": [2, 3, 4, 5],
             "gamma": ["scale", "auto"], 
             "coef0": [0.0, 0.5, 1.0, 1.5, 2.0],

@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import math
 from sklearn.semi_supervised import LabelPropagation
 from sklearn.preprocessing import OneHotEncoder
 import sklearn
@@ -24,11 +25,12 @@ sns.set()
 warnings.filterwarnings('ignore')
 
 
-def evaluate_preds(model, x_train, y_train, x_true, y_true, x_cv, y_cv):
+def evaluate_preds(model, x_train, y_train, x_true, y_true, x_cv, y_cv, x_predict):
     y_pred = model.predict(x_true)    
-    pred = model.predict(data_picker.x_predict) 
-    print("y_pred : ", y_pred)
-    print("pred : ", pred)
+    pred = model.predict(x_predict) 
+    # print("y_pred : ", y_pred)
+    # print("pred : ", pred)
+    print("pred : ", pred[0])
     print("Name of the kernel : ", model)
     print('Model Variance score: {}'.format(model.score(x_true, y_true)))
     print('Mean Absolute Error:', metrics.mean_absolute_error(y_true, y_pred))
@@ -36,7 +38,8 @@ def evaluate_preds(model, x_train, y_train, x_true, y_true, x_cv, y_cv):
     print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_true, y_pred)))
     print("explained variance regression score : ", explained_variance_score(y_true, y_pred))
     print("Max error : ", max_error(y_true, y_pred))
-    print("R² score, the coefficient of determination  : ", r2_score(y_true, y_pred))
+    print("R² score, the coefficient of determination  : ", r2_score(y_true, y_pred))  
+
 
     """
     metric_dict = {
@@ -47,6 +50,8 @@ def evaluate_preds(model, x_train, y_train, x_true, y_true, x_cv, y_cv):
     
     """
     
+    # ==================
+    """
     cross_validation_score = cross_val_score(model, x_train, y_train, cv=2)
     print("Cross validation score : ", cross_validation_score)
     cross_validation_predict = cross_val_predict(model, x_train, y_train, cv=2)
@@ -54,25 +59,14 @@ def evaluate_preds(model, x_train, y_train, x_true, y_true, x_cv, y_cv):
     cross_val_accuracy = np.mean(cross_validation_score) * 100
     print("cross validation accuracy : ", cross_val_accuracy)
     #return metric_dict
-   
-    elbo = []
-    list_k = list(range(2, 3))
+   """
+ 
+    eval_dict = {
+        "mean_absolute_error": metrics.mean_absolute_error(y_true, y_pred),               
+        "predicted_value": pred,
+        "r2_score": r2_score(y_true, y_pred),
+    }
 
-    for k in list_k:
-        cross_validation_score = cross_val_score(model, x_cv, y_cv, cv=k)        
-        elbo.append(cross_validation_score[-1])
-
-    cross_validation_predict = cross_val_predict(model, x_train, y_train, cv=k)
-    # print("Cross validation predict : ", cross_validation_predict)
-    print("elbo : ", elbo)
-    
-    # Plot 
-    plt.figure(figsize=(6, 6))
-    plt.plot(list_k, elbo, '-o')
-    plt.xlabel(r'Number of croos validation')
-    plt.ylabel('cross val score')
-    plt.show()
-
-
+    return  eval_dict
 
 

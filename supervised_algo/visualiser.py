@@ -35,5 +35,32 @@ def plotter(model, x_train, y_train, x_true, y_true):
     plt.legend(loc='best',fancybox=True, shadow=True)
     plt.show()   
 
+def computation_range_plotter_mae(df, msg):
+    result = df.loc[df.groupby("Computation Range")["Mean Absolout Error"].idxmin()]
+    computation_range  = result ['Computation Range'].tolist()
+    what_hour = result ['What Hour'].tolist()
+    mean_absolout_error = result ['Mean Absolout Error'].tolist()
+    plt.plot(computation_range, what_hour, label = 'What Hour',  marker='o', linewidth=2)
+    plt.plot(computation_range, mean_absolout_error, label = 'Mean Absolout Error', marker='o', linewidth=2)
+    plt.xlabel('Computation Range')
+    plt.legend()
+    plt.xticks(computation_range)
+    # plt.yticks(np.arange(0, len(what_hour) + 1, 1))
+    plt.title(msg)
+    plt.show()
+
+def computation_range_plotter_r2(df, msg):
+    result = df.loc[df.groupby("Computation Range")["r2_score"].idxmin()]
+    computation_range  = result ['Computation Range'].tolist()
+    what_hour = result ['What Hour'].tolist()
+    mean_absolout_error = result ['r2_score'].tolist()
+    plt.plot(computation_range, what_hour, label = 'What Hour',  marker='o', linewidth=2)
+    plt.plot(computation_range, mean_absolout_error, label = 'r2_score', marker='o', linewidth=2)
+    plt.xlabel('Computation Range')
+    plt.legend()
+    plt.xticks(computation_range)
+    # plt.yticks(np.arange(0, len(what_hour) + 1, 1))
+    plt.title(msg)
+    plt.show()
 
 

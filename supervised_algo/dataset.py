@@ -15,7 +15,7 @@ sns.set()
 
 def main():
 
-    # df = pd.read_json('dataset_10.json')
+    # df = pd.read_json('dataset.json')
     df = pd.read_csv('H:/Project/water_project/dataset/dataset_50.csv') 
     print("dataset description is : \n", df.describe())
     df = df[:5000]
@@ -39,9 +39,7 @@ def main():
     #------------- Reset the index whenever we change the context of our data frame------
     df1 = df1.reset_index(drop=True)
 
-    return df1
-    
-      
+    return df1    
     
  
 
