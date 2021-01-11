@@ -30,6 +30,9 @@ warnings.filterwarnings('ignore')
 
 
 def evaluate_ann(history, model, x_train, y_train, x_true, y_true, x_cv, y_cv, x_predict):
+    x_true = x_true.to_numpy()  
+    x_true=np.reshape(x_true,(x_true.shape[0], 7, 1))   
+    x_predict=np.reshape(x_predict,(x_predict.shape[0], 7, 1))  
     y_pred = model.predict(x_true)    
     pred = model.predict(x_predict) 
     history = model.fit(x_train, y_train, epochs=20, batch_size=len(x_train), verbose=2)
@@ -39,10 +42,10 @@ def evaluate_ann(history, model, x_train, y_train, x_true, y_true, x_cv, y_cv, x
     print("R² score, the coefficient of determination  : ", r2_score(y_true, y_pred))
     print("history keis :   ", history.history.keys())
     print("Loss value :   ", history.history['loss'])
-    print("Mean Squared Erro  :   ", history.history['mse'])
-    print("Mean Absolute Error  :   ", history.history['mae'])
-    print("Mean Absolute Percentage Error  :   ", history.history['mape'])
-    print("Cosine Proximity  :   ", history.history['cosine'])
+    print("Mean Squared Erro  :   ", history.history['mean_squared_error'])
+    print("Mean Absolute Error  :   ", history.history['mean_absolute_error'])
+    print("Mean Absolute Percentage Error  :   ", history.history['mean_absolute_percentage_error'])
+    # print("Cosine Proximity  :   ", history.history['cosine'])
     
     # plot metrics
     visualiser.plotter(history)

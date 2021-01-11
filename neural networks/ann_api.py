@@ -65,34 +65,7 @@ print("x_train shape : ", x_train.shape)
 print("x_train dtype :  ", x_train.dtypes)
 print("y_train shape  : ", y_train.shape)
 
-"""
-# keras model
-# #######################################################################
-def keras_model(inputDim):
-    
-    # define the keras model
-    # the model based on the simple dense auto encoder (64*64*8*64*64)
-  
-    inputLayer = Input(shape=(inputDim,))
-    h = Dense(64, activation="relu")(inputLayer)
-    h = Dense(64, activation="relu")(h)
-    h = Dense(8, activation="relu")(h)
-    h = Dense(64, activation="relu")(h)
-    h = Dense(64, activation="relu")(h)
-    h = Dense(inputDim, activation=None)(h)
 
-    return Model(inputs=inputLayer, outputs=h)
-
-# #######################################################################
-"""
-# model = Sequential()
-# model.add(Dense(12, activation='relu', input_shape=(7,)))
-# model.add(Dense(6, activation='relu'))
-# model.add(Dense(6, activation='relu'))
-# model.add(Dense(6, activation='relu'))
-# model.add(Dense(1, activation='sigmoid'))
-# model training
-# Model output shape
 def keras_model(input):
     inputs = keras.Input(shape=(input,))
     dense = layers.Dense(6, activation="relu")
@@ -124,6 +97,6 @@ model.summary()
 opt = tf.keras.optimizers.Adam(learning_rate=0.0001)
 # model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape', 'cosine'])
 model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape'])                   
-history = model.fit(x_train, y_train,epochs=50, batch_size=50, verbose=1)
+history = model.fit(x_train, y_train,epochs=10, batch_size=50, verbose=1)
 neural_network_evaluator.evaluate_ann(history, model, x_train, y_train, x_test, y_test, x_cv, y_cv, x_predict)
 # history = model.fit(X, X, epochs=500, batch_size=len(X), verbose=2)

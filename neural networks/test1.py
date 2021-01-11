@@ -3,6 +3,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
 from keras.layers import LSTM, Dense, Dropout, Masking, Embedding
 import dataset
 import neural_network_evaluator
@@ -61,42 +63,34 @@ print("y_train shape  : ", y_train.shape)
 
 #////////////////////////////////////////////////////////////
 # x_train,y_train=np.array(x_train),np.array(y_train)
-# x_train=np.reshape(x_train,(x_train.shape[0],x_train.shape[1],1))
-lstm_model=Sequential()
+# x_train.to_numpy()
+x_train = x_train.to_numpy()
+print("x_train  :   \n", x_train)
+x_train=np.reshape(x_train,(x_train.shape[0],7,1))
+print("x_train shape :   \n", x_train.shape)
+
+model=Sequential()
 # lstm_model.add(LSTM(100, input_shape=(7,1)))
-lstm_model.add(LSTM(units=50,return_sequences=True,input_shape=(7, 1)))
+model.add(LSTM(units=50,return_sequences=True,input_shape=(7, 1)))
 # lstm_model.add(LSTM(units = 50, return_sequences = True, input_shape = (x_train.shape[1], 1)))
-lstm_model.add(LSTM(units=50))
-lstm_model.add(Dense(1))
-# inputs_data=new_dataset[len(new_dataset)-len(valid_data)-60:].values
-# inputs_data=inputs_data.reshape(-1,1)
-# inputs_data=scaler.transform(inputs_data)
-# model.compile(loss='mean_squared_error', optimizer='adam') 
-x_train = tf.reshape(x_train, (len(x_train), 7, 1))
-# x_train = x_train.reshape((len(x_train), 1, 1))
-print("x_train shape : ", x_train.shape)
-print("y_train shape : ", y_train.shape)
+model.add(LSTM(units=50))
+model.add(Dense(1))
+
+# =============
+# def keras_model(input):
+#     inputs = keras.Input(shape=(input, 1))
+#     model = layers.LSTM(8)(inputs)
+#     model = layers.LSTM(8)(model)
+#     outputs = layers.Dense(1)(model)
+#     model = keras.Model(inputs=inputs, outputs=outputs, name="mnist_model")
+#     return model
+
+
+# model = keras_model(7)
+
+# ===============
+
 opt = tf.keras.optimizers.Adam(learning_rate=0.0001)
-lstm_model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape', 'cosine'])
-history = lstm_model.fit(x_train, y_train, epochs=30, batch_size=1, verbose=2)
+model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape', 'cosine'])
+history = model.fit(x_train, y_train, epochs=5, batch_size=1, verbose=2)
 
-# //////////////////////////////////////////////////////////////////////////
-# model training
-# Model output shape
-print("output_shape  :   ", lstm_model.output_shape)
-
-# Model summary
-lstm_model.summary()
-
-# Model config
-# print("get_config  :   ",model.get_config())
-
-# List all weight tensors 
-# print("get_weights  :   ", model.get_weights())
-
-## opt = tf.keras.optimizers.Adam(learning_rate=0.0001)
-## model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape', 'cosine'])
-                   
-## history = model.fit(x_train, y_train,epochs=50, batch_size=1, verbose=1)
-neural_network_evaluator.evaluate_ann(history, model, x_train, y_train, x_test, y_test, x_cv, y_cv, x_predict)
-# history = model.fit(X, X, epochs=500, batch_size=len(X), verbose=2)
