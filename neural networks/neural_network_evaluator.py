@@ -21,6 +21,7 @@ from sklearn.metrics import roc_auc_score
 # )
 from gaussrank import *
 import warnings
+import visualiser
 # import data_picker
 import seaborn as sns
 sns.set()
@@ -44,14 +45,10 @@ def evaluate_ann(history, model, x_train, y_train, x_true, y_true, x_cv, y_cv, x
     print("Cosine Proximity  :   ", history.history['cosine'])
     
     # plot metrics
-    plt.plot(history.history['mse'])
-    plt.plot(history.history['mae'])
-    plt.plot(history.history['mape'])
-    plt.plot(history.history['cosine'])
-    plt.show()
-
+    visualiser.plotter(history)
  
-    eval_dict = {                       
+    eval_dict = {           
+        "history": history,            
         "predicted_value": pred,
     }
 

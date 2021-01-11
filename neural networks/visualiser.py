@@ -22,18 +22,16 @@ sns.set()
 
 warnings.filterwarnings('ignore')
 
-
-def plotter(model, x_train, y_train, x_true, y_true):
-    y_pred = model.predict(x_true)
-    x_var = np.arange(0, len(y_true))  
-    plt.scatter(x_var, y_true,  color='black', label="original")
-    plt.plot(x_var, y_pred, color='blue', linewidth=3, label="predicted")
-    plt.xticks(())
-    plt.yticks(())
+def plotter(history):
+    print()
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['mean_squared_error'])
+    plt.plot(history.history['mean_absolute_error'])
+    plt.plot(history.history['mean_absolute_percentage_error'])
     plt.xlabel('X-axis')
-    plt.ylabel('Y-axis')
-    plt.legend(loc='best',fancybox=True, shadow=True)
-    plt.show()   
+    plt.ylabel('Y-axis')  
+    # plt.legend(loc='best',fancybox=True, shadow=True)
+    plt.show()
 
 
 

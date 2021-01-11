@@ -93,24 +93,28 @@ def keras_model(inputDim):
 # model.add(Dense(1, activation='sigmoid'))
 # model training
 # Model output shape
-inputs = keras.Input(shape=(7,))
-dense = layers.Dense(64, activation="relu")
-hidden_layer = dense(inputs)
-hidden_layer = layers.Dense(64, activation="relu")(hidden_layer)
-outputs = layers.Dense(1)(hidden_layer)
+def keras_model(input):
+    inputs = keras.Input(shape=(input,))
+    dense = layers.Dense(6, activation="relu")
+    hidden_layer = dense(inputs)
+    hidden_layer = layers.Dense(6, activation="relu")(hidden_layer)
+    outputs = layers.Dense(1)(hidden_layer)
 
-model = keras.Model(inputs=inputs, outputs=outputs, name="mnist_model")
+    model = keras.Model(inputs=inputs, outputs=outputs, name="mnist_model")
+    return model
 
 
-
+model = keras_model(7)
 
 print("output_shape  :   ", model.output_shape)
 
 # Model summary
 model.summary()
 
-keras.utils.plot_model(model, "my_first_model.png")
-
+# ===================================plotting the model as a graph start
+# keras.utils.plot_model(model, "my_first_model.png")
+# keras.utils.plot_model(model, "my_first_model_with_shape_info.png", show_shapes=True)
+# ===================================plotting the model as a graph end
 # Model config
 # print("get_config  :   ",model.get_config())
 
@@ -119,7 +123,7 @@ keras.utils.plot_model(model, "my_first_model.png")
 
 opt = tf.keras.optimizers.Adam(learning_rate=0.0001)
 # model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape', 'cosine'])
-model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape', 'cosine'])                   
-history = model.fit(x_train, y_train,epochs=50, batch_size=1, verbose=1)
+model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape'])                   
+history = model.fit(x_train, y_train,epochs=50, batch_size=50, verbose=1)
 neural_network_evaluator.evaluate_ann(history, model, x_train, y_train, x_test, y_test, x_cv, y_cv, x_predict)
 # history = model.fit(X, X, epochs=500, batch_size=len(X), verbose=2)
