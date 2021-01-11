@@ -226,7 +226,7 @@ def calculator(clf, dataset, dId_list, year, month, day, hour, computation_range
 
     except Exception as e:
         # logging.error("something went wrong", exc_info=e)
-        print("There was an error, R2 Score is empty")
+        print("There was an error, R2 Score is empty, please select a larger data batch")
 
 
     

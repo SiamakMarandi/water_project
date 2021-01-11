@@ -47,42 +47,45 @@ print("dataset : ", dataset)
 indexHour = dataset[(dataset['Year'] == year) & (dataset['Month']== month) & 
 (dataset["hour"] == hour) & (dataset["Day"] == day)].index
 print("index hour   :   ", indexHour)
-if(int(dataset.loc[indexHour[0]].Is_weekend) == 0):   
-    dataset = dataset.loc[dataset['Is_weekend'] == "0"]
-    day_type = "Day is Not Weekend"
-    # print("filtered datase : ", dataset)
-else:
-    dataset = dataset.loc[dataset['Is_weekend'] == "1"]
-    day_type = "Day is Weekend"
-    # print("filtered datase : ", dataset)
+try:
+    if(int(dataset.loc[indexHour[0]].Is_weekend) == 0):   
+        dataset = dataset.loc[dataset['Is_weekend'] == "0"]
+        day_type = "Day is Not Weekend"
+        # print("filtered datase : ", dataset)
+    else:
+        dataset = dataset.loc[dataset['Is_weekend'] == "1"]
+        day_type = "Day is Weekend"
+        # print("filtered datase : ", dataset)
 
-print("dataset : ", dataset)
-dId_list = dataset.DeviceId.unique()
-# print("dId_list : ", dId_list)
+    print("dataset : ", dataset)
+    dId_list = dataset.DeviceId.unique()
+    # print("dId_list : ", dId_list)
 
-# ===============================
-# print("dataset : ", dataset)
-y_dataset = dataset.Value
-x_dataset = dataset.drop(["Value"], axis=1)
-# print("y_dataset : ",y_dataset)
-# print("x_dataset : ", x_dataset)
-x_train, x_test, y_train, y_test = train_test_split(x_dataset, y_dataset, shuffle=False, test_size=0.2, random_state=42)
+    # ===============================
+    # print("dataset : ", dataset)
+    y_dataset = dataset.Value
+    x_dataset = dataset.drop(["Value"], axis=1)
+    # print("y_dataset : ",y_dataset)
+    # print("x_dataset : ", x_dataset)
+    x_train, x_test, y_train, y_test = train_test_split(x_dataset, y_dataset, shuffle=False, test_size=0.2, random_state=42)
 
-x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, shuffle=False, test_size=0.2, random_state=42)
+    x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, shuffle=False, test_size=0.2, random_state=42)
 
-# print("x_train : ", x_train)
-# print("y_train : ", y_train)
-# print("x_test : ", x_test)
-# print("y_test : ", y_test)
+    # print("x_train : ", x_train)
+    # print("y_train : ", y_train)
+    # print("x_test : ", x_test)
+    # print("y_test : ", y_test)
 
-clf = SVR(kernel = 'rbf')
-# ======================= hyperparameter tuning
-# params = hyperparameter_tuning.svm_hyperparameter_tuner(clf, x_train, y_train)
-# clf.set_params(**params)
-# ==========================
-clf.fit(x_train, y_train)
-# print("device id list", dId_list)
-# print("dataset : , ", dataset)
-print("Hello World ")
-data_picker.calculator(clf, dataset, dId_list, year, month, day, hour, computation_range, what_hour, dId, day_type)
+    clf = SVR(kernel = 'rbf')
+    # # //////////////////////////////////////// hyperparameter tuning
+   
+    params = hyperparameter_tuning.svm_hyperparameter_tuner(clf, x_train, y_train)
+    clf.set_params(**params)    
+    # # ////////////////////////////////////////
+    clf.fit(x_train, y_train)
+    # print("device id list", dId_list)
+    # print("dataset : , ", dataset)
 
+    data_picker.calculator(clf, dataset, dId_list, year, month, day, hour, computation_range, what_hour, dId, day_type)
+except :
+    print("Thers is an Error, please select a larger data batch")

@@ -15,8 +15,9 @@ sns.set()
 
 def main():
 
-    # df = pd.read_json('dataset.json')
-    df = pd.read_csv('H:/Project/water_project/dataset/dataset_50.csv') 
+    # df = pd.read_json('dataset.json') # for selecting whole dataset uncomment this line
+    # df = pd.read_csv('H:/Project/water_project/dataset/dataset_50.csv') 
+    df = pd.read_csv('dataset_50.csv') # for selecting a batch of dataset uncomment this line
     print("dataset description is : \n", df.describe())
     df = df[:500]
     # create a Data Frame
