@@ -59,9 +59,8 @@ def calculator(model, dataset, x_dataset_ohe, y_dataset_ohe, dId_list, year, mon
         for duration in computation_range:
             for wh in what_hour:     
                 try:
-                    # print("x_df_filtered    :   \n", x_df_filtered)           
+                    print("x_df_filtered    :   \n", x_df_filtered)           
                     print("what hour : ", wh)
-                    print("Computation Range : ", duration)
                     indexHour = x_df_filtered[(x_df_filtered['Year'] == year) &
                     (x_df_filtered["hour"] == hour) & 
                     (x_df_filtered['Month']== month) &                 
@@ -110,25 +109,25 @@ def calculator(model, dataset, x_dataset_ohe, y_dataset_ohe, dId_list, year, mon
                     x_train, x_test, y_train, y_test = train_test_split(x_dataset, y_dataset, shuffle=False, test_size=0.2, random_state=42)
 
                     # x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, shuffle=False, test_size=0.2, random_state=42)
-                    # print("x_train shape :   \n", x_train.shape)
-                    # print("x_train  :   \n", x_train)
+                    print("x_train shape :   \n", x_train.shape)
+                    print("x_train  :   \n", x_train)
                     # x_train = x_train.to_numpy()
                     print("indexHour[0] :   ", indexHour[0])
                     x_predict = x_dataset_ohe[indexHour[0]]
                     # x_predict = x_dataset_ohe.loc[[indexHour[0]]]
                     y_predict = y_dataset_ohe[indexHour[0]]  
-                    # print("x_train  :", x_train)
-                    # print("y_train  :", y_train)                     
-                    # print("x_train shape :", x_train.shape)
-                    # print("y_train shape :", y_train.shape) 
-                    # print("x_test  :", x_test)
-                    # print("y_test  :", y_test)                     
-                    # print("x_test shape :", x_test.shape)
-                    # print("y_test shape :", y_test.shape) 
-                    # print("x_predict :", x_predict)
-                    # print("y_predict :", y_predict)
-                    # print("x_predict shape :", x_predict.shape)
-                    # print("y_predict shape :", y_predict.shape)
+                    print("x_train  :", x_train)
+                    print("y_train  :", y_train)                     
+                    print("x_train shape :", x_train.shape)
+                    print("y_train shape :", y_train.shape) 
+                    print("x_test  :", x_test)
+                    print("y_test  :", y_test)                     
+                    print("x_test shape :", x_test.shape)
+                    print("y_test shape :", y_test.shape) 
+                    print("x_predict :", x_predict)
+                    print("y_predict :", y_predict)
+                    print("x_predict shape :", x_predict.shape)
+                    print("y_predict shape :", y_predict.shape)
                 
                                 
                     x_predict = np.reshape(x_predict,(1, x_predict.shape[0], 1))
@@ -245,7 +244,7 @@ def calculator(model, dataset, x_dataset_ohe, y_dataset_ohe, dId_list, year, mon
     pk = result_df_final_mae.drop(["DeviceId", "Computation Range", "Predicted Water Consumtion", "r2_score"], axis=1)
     df = result_df_final_mae.drop(["DeviceId", "Predicted Water Consumtion"], axis=1)   
     
-    # gk = pk.groupby(['What Hour'], axis=0).count()    
+    gk = pk.groupby(['What Hour'], axis=0).count()    
     gk = pk.groupby(['What Hour'], axis=0).sum()   
 
  # ========================== test 

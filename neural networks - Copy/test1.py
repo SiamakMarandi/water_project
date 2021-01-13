@@ -22,15 +22,10 @@ computation_range = np.arange(1,5, 1)
 what_hour = np.arange(1,3, 1)
 dataset = dataset.main()
 
-
-
-
 # x_predict = x_predict.values.ravel()
 # print("x_predict shape :", x_predict.shape)
 # ========================= filtering the dataset accoring to id, year, month, day, hour
 # print("dataset : ", dataset)
-
-    # print("filtered datase : ", dataset)
 dId_list = dataset.DeviceId.unique()
 # print("dId_list : ", dId_list)
 
@@ -46,10 +41,15 @@ print("index :: ", indexH[0])
 x_predict = x_dataset.iloc[indexH[0]]
 print("x_predict shape :", x_predict.shape)
 
+x_predict = x_predict.ravel()
+print("x_predict shape :", x_predict.shape)
+
+x_predict = x_predict.reshape(-1, 1)
+print("x_predict shape :", x_predict.shape)
+
+x_predict = x_predict.reshape(1, -1)
+print("x_predict shape :", x_predict.shape)
 # =============
-
-
-# ==============
 
 # print("y_dataset : ",y_dataset)
 # print("x_dataset : ", x_dataset)
@@ -59,45 +59,38 @@ x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, shuffle=False,
 print("x_train : ", x_train)
 print("y_train : ", y_train)
 print("x_train shape : ", x_train.shape)
-print("x_train dtype :  ", x_train.dtypes)
 print("y_train shape  : ", y_train.shape)
+
+#////////////////////////////////////////////////////////////
+# x_train,y_train=np.array(x_train),np.array(y_train)
+# x_train.to_numpy()
 x_train = x_train.to_numpy()
 print("x_train  :   \n", x_train)
-x_train=np.reshape(x_train,(x_train.shape[0], 7, 1))
+x_train=np.reshape(x_train,(x_train.shape[0],7,1))
 print("x_train shape :   \n", x_train.shape)
 
-def keras_model(input):
-    inputs = keras.Input(shape=(input, 1))
-    model = layers.LSTM(12, return_sequences=True)(inputs)
-    model = layers.LSTM(12)(model)  
-    model = layers.Dense(10)(model)
-    outputs = layers.Dense(1)(model)
-    model = keras.Model(inputs=inputs, outputs=outputs, name="water_predictor")
-    return model
+model=Sequential()
+# lstm_model.add(LSTM(100, input_shape=(7,1)))
+model.add(LSTM(units=50,return_sequences=True,input_shape=(7, 1)))
+# lstm_model.add(LSTM(units = 50, return_sequences = True, input_shape = (x_train.shape[1], 1)))
+model.add(LSTM(units=50))
+model.add(Dense(1))
+
+# =============
+# def keras_model(input):
+#     inputs = keras.Input(shape=(input, 1))
+#     model = layers.LSTM(8)(inputs)
+#     model = layers.LSTM(8)(model)
+#     outputs = layers.Dense(1)(model)
+#     model = keras.Model(inputs=inputs, outputs=outputs, name="mnist_model")
+#     return model
 
 
-model = keras_model(7)
+# model = keras_model(7)
 
-print("output_shape  :   ", model.output_shape)
-
-# Model summary
-model.summary()
-
-# ===================================plotting the model as a graph start
-# keras.utils.plot_model(model, "my_first_model.png")
-# keras.utils.plot_model(model, "my_first_model_with_shape_info.png", show_shapes=True)
-# ===================================plotting the model as a graph end
-# Model config
-# print("get_config  :   ",model.get_config())
-
-# List all weight tensors 
-# print("get_weights  :   ", model.get_weights())
+# ===============
 
 opt = tf.keras.optimizers.Adam(learning_rate=0.0001)
-# model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape', 'cosine'])
-model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape'])  
-
-history = model.fit(x_train, y_train,epochs=5, batch_size=50, verbose=1)
-neural_network_evaluator.evaluate_ann(history, model, x_train, y_train, x_test, y_test, x_cv, y_cv, x_predict)
-
+model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape', 'cosine'])
+history = model.fit(x_train, y_train, epochs=5, batch_size=1, verbose=2)
 

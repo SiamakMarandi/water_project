@@ -29,8 +29,6 @@ dataset = dataset.main()
 # print("x_predict shape :", x_predict.shape)
 # ========================= filtering the dataset accoring to id, year, month, day, hour
 # print("dataset : ", dataset)
-
-    # print("filtered datase : ", dataset)
 dId_list = dataset.DeviceId.unique()
 # print("dId_list : ", dId_list)
 
@@ -46,10 +44,15 @@ print("index :: ", indexH[0])
 x_predict = x_dataset.iloc[indexH[0]]
 print("x_predict shape :", x_predict.shape)
 
+x_predict = x_predict.ravel()
+print("x_predict shape :", x_predict.shape)
+
+x_predict = x_predict.reshape(-1, 1)
+print("x_predict shape :", x_predict.shape)
+
+x_predict = x_predict.reshape(1, -1)
+print("x_predict shape :", x_predict.shape)
 # =============
-
-
-# ==============
 
 # print("y_dataset : ",y_dataset)
 # print("x_dataset : ", x_dataset)
@@ -61,18 +64,16 @@ print("y_train : ", y_train)
 print("x_train shape : ", x_train.shape)
 print("x_train dtype :  ", x_train.dtypes)
 print("y_train shape  : ", y_train.shape)
-x_train = x_train.to_numpy()
-print("x_train  :   \n", x_train)
-x_train=np.reshape(x_train,(x_train.shape[0], 7, 1))
-print("x_train shape :   \n", x_train.shape)
+
 
 def keras_model(input):
-    inputs = keras.Input(shape=(input, 1))
-    model = layers.LSTM(12, return_sequences=True)(inputs)
-    model = layers.LSTM(12)(model)  
-    model = layers.Dense(10)(model)
-    outputs = layers.Dense(1)(model)
-    model = keras.Model(inputs=inputs, outputs=outputs, name="water_predictor")
+    inputs = keras.Input(shape=(input,))
+    dense = layers.Dense(6, activation="relu")
+    hidden_layer = dense(inputs)
+    hidden_layer = layers.Dense(6, activation="relu")(hidden_layer)
+    outputs = layers.Dense(1)(hidden_layer)
+
+    model = keras.Model(inputs=inputs, outputs=outputs, name="mnist_model")
     return model
 
 
@@ -95,9 +96,7 @@ model.summary()
 
 opt = tf.keras.optimizers.Adam(learning_rate=0.0001)
 # model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape', 'cosine'])
-model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape'])  
-
-history = model.fit(x_train, y_train,epochs=5, batch_size=50, verbose=1)
+model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape'])                   
+history = model.fit(x_train, y_train,epochs=10, batch_size=50, verbose=1)
 neural_network_evaluator.evaluate_ann(history, model, x_train, y_train, x_test, y_test, x_cv, y_cv, x_predict)
-
-
+# history = model.fit(X, X, epochs=500, batch_size=len(X), verbose=2)

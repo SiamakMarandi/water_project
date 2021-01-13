@@ -38,9 +38,9 @@ year = 2019
 month = 6
 day = 21
 hour = 13
-computation_range = np.arange(1,5, 1)
+computation_range = np.arange(1,9, 1)
 # computation_range = [5, 10, 17, 35, 55, 78, 1002]
-what_hour = np.arange(1,3, 1)
+what_hour = np.arange(1,8, 1)
 dataset = dataset.main()
 # ========================= filtering the dataset accoring to id, year, month, day, hour and weekend
 print("dataset : ", dataset)
@@ -79,8 +79,8 @@ try:
     clf = SVR(kernel = 'rbf')
     # # //////////////////////////////////////// hyperparameter tuning
    
-    params = hyperparameter_tuning.svm_hyperparameter_tuner(clf, x_train, y_train)
-    clf.set_params(**params)    
+    # params = hyperparameter_tuning.svm_hyperparameter_tuner(clf, x_train, y_train)
+    # clf.set_params(**params)    
     # # ////////////////////////////////////////
     clf.fit(x_train, y_train)
     # print("device id list", dId_list)

@@ -2,6 +2,7 @@ import os
 import glob
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
+
 from gaussrank import *
 import logging
 import pandas as pd
@@ -58,128 +59,125 @@ def calculator(model, dataset, x_dataset_ohe, y_dataset_ohe, dId_list, year, mon
         
         for duration in computation_range:
             for wh in what_hour:     
-                try:
-                    # print("x_df_filtered    :   \n", x_df_filtered)           
-                    print("what hour : ", wh)
-                    print("Computation Range : ", duration)
-                    indexHour = x_df_filtered[(x_df_filtered['Year'] == year) &
-                    (x_df_filtered["hour"] == hour) & 
-                    (x_df_filtered['Month']== month) &                 
-                    (x_df_filtered["Day"] == day)].index
-                    # print("df_filtered : ", x_df_filtered)
-                    # print("df_filtered : ", y_df_filtered)
-                    
-                    print("indexHour : ", indexHour[0])
-                    start_index = indexHour[0] - (duration + wh)
-
-
-
-
-                    # /////////////////////////////////////////////////     
-
-                    x_dataset = x_dataset_ohe[start_index : start_index + duration]
-
-                    y_dataset = y_dataset_ohe[start_index : start_index + duration]
-                    # print("x_dataset : ", x_dataset)
-                    # print("x_dataset shape : ", x_dataset.shape)
-                    # print("x_dataset : ", y_dataset)
-                    # print("y_dataset shape : ", y_dataset.shape)
-                    # print("x_dataset : ", x_dataset)
-                    # print("y_dataset : ", y_dataset)
-                    # print("x_dataset : ", x_dataset)
-                    # print("x_dataset : ", x_dataset)
-
-
-
-                    # /////////////
-                    # x_cols = y_df_filtered.columns[:]
-                    # x = y_df_filtered[x_cols]
-
-                    # s = GaussRankScaler()
-                    # x_ = s.fit_transform(x)
-                    # assert x_.shape == x.shape
-                    # y_df_filtered[x_cols] = x_
-                    # ===============
-                    # print('Number of data points in train data:', x)
-                    #-----------------------------------Categorical to Binary-----------------------------------------
-
-                    # Train and Test (x,y) / shuffle false because of importance roll of date in our study----------------------
-                    # train_x, test_x, train_y, test_y = train_test_split(X_ohe, y, stratify=y, test_size=0.3, shuffle=False)
-                    # #################################
-
-                    x_train, x_test, y_train, y_test = train_test_split(x_dataset, y_dataset, shuffle=False, test_size=0.2, random_state=42)
-
-                    # x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, shuffle=False, test_size=0.2, random_state=42)
-                    # print("x_train shape :   \n", x_train.shape)
-                    # print("x_train  :   \n", x_train)
-                    # x_train = x_train.to_numpy()
-                    print("indexHour[0] :   ", indexHour[0])
-                    x_predict = x_dataset_ohe[indexHour[0]]
-                    # x_predict = x_dataset_ohe.loc[[indexHour[0]]]
-                    y_predict = y_dataset_ohe[indexHour[0]]  
-                    # print("x_train  :", x_train)
-                    # print("y_train  :", y_train)                     
-                    # print("x_train shape :", x_train.shape)
-                    # print("y_train shape :", y_train.shape) 
-                    # print("x_test  :", x_test)
-                    # print("y_test  :", y_test)                     
-                    # print("x_test shape :", x_test.shape)
-                    # print("y_test shape :", y_test.shape) 
-                    # print("x_predict :", x_predict)
-                    # print("y_predict :", y_predict)
-                    # print("x_predict shape :", x_predict.shape)
-                    # print("y_predict shape :", y_predict.shape)
+ 
+                print("x_df_filtered    :   \n", x_df_filtered)           
+                print("what hour : ", wh)
+                indexHour = x_df_filtered[(x_df_filtered['Year'] == year) &
+                (x_df_filtered["hour"] == hour) & 
+                (x_df_filtered['Month']== month) &                 
+                (x_df_filtered["Day"] == day)].index
+                # print("df_filtered : ", x_df_filtered)
+                # print("df_filtered : ", y_df_filtered)
                 
-                                
-                    x_predict = np.reshape(x_predict,(1, x_predict.shape[0], 1))
-                    print("x_predict shape :", x_predict.shape)
-                    x_train=np.reshape(x_train,(x_train.shape[0], x_train.shape[1], 1))
-                    x_test=np.reshape(x_test,(x_test.shape[0], x_test.shape[1], 1))
-
-                    # def keras_model(input):
-                    #     inputs = keras.Input(shape=(input, 1))
-                    #     model = layers.LSTM(12, return_sequences=True)(inputs)
-                    #     model = layers.LSTM(12)(model)  
-                    #     model = layers.Dense(10)(model)
-                    #     outputs = layers.Dense(1)(model)
-                    #     model = keras.Model(inputs=inputs, outputs=outputs, name="water_predictor")
-                    #     return model
-
-                    
-                    # model = keras_model(x_train.shape[1])
-                    # model.summary()
-                    # opt = tf.keras.optimizers.Adam(learning_rate=0.0001)
-                    # # model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape', 'cosine'])
-                    # model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape'])  
-
-                    # history = model.fit(x_train, y_train,epochs=5, batch_size=50, verbose=1)
-                    history = model.fit(x_train, y_train,epochs=2, batch_size=100, verbose=1)
-                    # evaluation_dict = neural_network_evaluator.evaluate_ann(history, model, x_train, y_train, x_test, y_test, x_cv, y_cv, x_predict)
-
-                    # x_predict = np.reshape(x_predict,(x_predict.shape[0], 7, 1))  
-                    y_pred = model.predict(x_test)
-                    print("y_pred : ", y_pred)    
-                    pred = model.predict(x_predict)[0] 
-                    print("R² score, the coefficient of determination  : ", r2_score(y_test, y_pred))
-                    print("history keis :   ", history.history.keys())
-                    print("Loss value :   ", history.history['loss'])
-                    print("Mean Squared Erro  :   ", history.history['mean_squared_error'])
-                    print("Mean Absolute Error  :   ", history.history['mean_absolute_error'])
-                    print("Mean Absolute Percentage Error  :   ", history.history['mean_absolute_percentage_error'])
+                print("indexHour : ", indexHour[0])
+                start_index = indexHour[0] - (duration + wh)
 
 
 
-                    # visualiser.plotter(clf, x_train, y_train, x_test, y_test)
-                    result_df.at[i, 'DeviceId'] = dId
-                    result_df.at[i, "What Hour"] = wh
-                    result_df.at[i, "Computation Range"] = duration
-                    result_df.at[i, 'Predicted Water Consumtion'] = pred[0]
-                    result_df.at[i, 'Mean Absolout Error'] = history.history['mean_absolute_error'][0]
-                    result_df.at[i, "r2_score"] = r2_score(y_test, y_pred)
-                    i = i + 1
-                except Exception as e:
-                    # logging.error("something went wrong", exc_info=e)
-                    print("there is no value for this device ID : ", dId)
+
+                # /////////////////////////////////////////////////     
+
+                x_dataset = x_dataset_ohe[start_index : start_index + duration]
+
+                y_dataset = y_dataset_ohe[start_index : start_index + duration]
+                # print("x_dataset : ", x_dataset)
+                # print("x_dataset shape : ", x_dataset.shape)
+                # print("x_dataset : ", y_dataset)
+                # print("y_dataset shape : ", y_dataset.shape)
+                # print("x_dataset : ", x_dataset)
+                # print("y_dataset : ", y_dataset)
+                # print("x_dataset : ", x_dataset)
+                # print("x_dataset : ", x_dataset)
+
+
+
+                # /////////////
+                # x_cols = y_df_filtered.columns[:]
+                # x = y_df_filtered[x_cols]
+
+                # s = GaussRankScaler()
+                # x_ = s.fit_transform(x)
+                # assert x_.shape == x.shape
+                # y_df_filtered[x_cols] = x_
+                # ===============
+                # print('Number of data points in train data:', x)
+                #-----------------------------------Categorical to Binary-----------------------------------------
+
+                # Train and Test (x,y) / shuffle false because of importance roll of date in our study----------------------
+                # train_x, test_x, train_y, test_y = train_test_split(X_ohe, y, stratify=y, test_size=0.3, shuffle=False)
+                # #################################
+
+                x_train, x_test, y_train, y_test = train_test_split(x_dataset, y_dataset, shuffle=False, test_size=0.2, random_state=42)
+
+                # x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, shuffle=False, test_size=0.2, random_state=42)
+                print("x_train shape :   \n", x_train.shape)
+                print("x_train  :   \n", x_train)
+                # x_train = x_train.to_numpy()
+                print("indexHour[0] :   ", indexHour[0])
+                x_predict = x_dataset_ohe[indexHour[0]]
+                # x_predict = x_dataset_ohe.loc[[indexHour[0]]]
+                y_predict = y_dataset_ohe[indexHour[0]]  
+                print("x_train  :", x_train)
+                print("y_train  :", y_train)                     
+                print("x_train shape :", x_train.shape)
+                print("y_train shape :", y_train.shape) 
+                print("x_test  :", x_test)
+                print("y_test  :", y_test)                     
+                print("x_test shape :", x_test.shape)
+                print("y_test shape :", y_test.shape) 
+                print("x_predict :", x_predict)
+                print("y_predict :", y_predict)
+                print("x_predict shape :", x_predict.shape)
+                print("y_predict shape :", y_predict.shape)
+            
+                            
+                x_predict = np.reshape(x_predict,(1, x_predict.shape[0], 1))
+                print("x_predict shape :", x_predict.shape)
+                x_train=np.reshape(x_train,(x_train.shape[0], x_train.shape[1], 1))
+                x_test=np.reshape(x_test,(x_test.shape[0], x_test.shape[1], 1))
+
+                # def keras_model(input):
+                #     inputs = keras.Input(shape=(input, 1))
+                #     model = layers.LSTM(12, return_sequences=True)(inputs)
+                #     model = layers.LSTM(12)(model)  
+                #     model = layers.Dense(10)(model)
+                #     outputs = layers.Dense(1)(model)
+                #     model = keras.Model(inputs=inputs, outputs=outputs, name="water_predictor")
+                #     return model
+
+                
+                # model = keras_model(x_train.shape[1])
+                # model.summary()
+                # opt = tf.keras.optimizers.Adam(learning_rate=0.0001)
+                # # model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape', 'cosine'])
+                # model.compile(loss='mse', optimizer=opt, metrics=['mse', 'mae', 'mape'])  
+
+                # history = model.fit(x_train, y_train,epochs=5, batch_size=50, verbose=1)
+                history = model.fit(x_train, y_train,epochs=5, batch_size=100, verbose=1)
+                # evaluation_dict = neural_network_evaluator.evaluate_ann(history, model, x_train, y_train, x_test, y_test, x_cv, y_cv, x_predict)
+
+                # x_predict = np.reshape(x_predict,(x_predict.shape[0], 7, 1))  
+                y_pred = model.predict(x_test)
+                print("y_pred : ", y_pred)    
+                pred = model.predict(x_predict)[0] 
+                print("R² score, the coefficient of determination  : ", r2_score(y_test, y_pred))
+                print("history keis :   ", history.history.keys())
+                print("Loss value :   ", history.history['loss'])
+                print("Mean Squared Erro  :   ", history.history['mean_squared_error'])
+                print("Mean Absolute Error  :   ", history.history['mean_absolute_error'])
+                print("Mean Absolute Percentage Error  :   ", history.history['mean_absolute_percentage_error'])
+
+
+
+                # visualiser.plotter(clf, x_train, y_train, x_test, y_test)
+                result_df.at[i, 'DeviceId'] = dId
+                result_df.at[i, "What Hour"] = wh
+                result_df.at[i, "Computation Range"] = duration
+                result_df.at[i, 'Predicted Water Consumtion'] = pred[0]
+                result_df.at[i, 'Mean Absolout Error'] = history.history['mean_absolute_error'][0]
+                result_df.at[i, "r2_score"] = r2_score(y_test, y_pred)
+                i = i + 1
+
         
         print("path  :  ", path)
         result_df.to_csv(f'{path}\\result_{dId}.csv', index = False)
@@ -245,7 +243,7 @@ def calculator(model, dataset, x_dataset_ohe, y_dataset_ohe, dId_list, year, mon
     pk = result_df_final_mae.drop(["DeviceId", "Computation Range", "Predicted Water Consumtion", "r2_score"], axis=1)
     df = result_df_final_mae.drop(["DeviceId", "Predicted Water Consumtion"], axis=1)   
     
-    # gk = pk.groupby(['What Hour'], axis=0).count()    
+    gk = pk.groupby(['What Hour'], axis=0).count()    
     gk = pk.groupby(['What Hour'], axis=0).sum()   
 
  # ========================== test 
